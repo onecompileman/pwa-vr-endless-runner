@@ -5,16 +5,20 @@
   "main": "index.js",
   "dependencies": {
     "copy-webpack-plugin": "^5.1.1",
+    "hammerjs": "^2.0.8",
     "html-webpack-plugin": "^3.2.0",
-    "three": "^0.114.0",
     "lodash": "^4.17.15",
+    "three": "^0.114.0",
     "webpack": "^4.42.0",
     "webpack-dev-server": "^3.10.3",
     "workbox-webpack-plugin": "^5.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "webpack-cli": "^3.3.11"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "webpack-dev-server",
+    "build": "webpack"
   },
   "author": "stephen.vinuya@gmail.com",
   "license": "ISC"
