@@ -16,6 +16,21 @@ export class MainPlatformManager {
     }
   }
 
+  reset() {
+    this.mainPlatforms = this.mainPlatforms.filter(mainPlatform => {
+      Object.keys(mainPlatform).forEach(platformName => {
+        const objectPoolInstance = mainPlatform[platformName].objectPool;
+
+        this.objectPoolManager.free(
+          objectPoolInstance.name,
+          objectPoolInstance.index
+        );
+      });
+
+      return false;
+    });
+  }
+
   updateMainPlatforms(playerZLocation) {
     this.mainPlatforms = this.mainPlatforms.filter(mainPlatform => {
       const position = mainPlatform.platform1.object.position;

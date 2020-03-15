@@ -5,7 +5,8 @@ import {
   AnimationClip,
   LoopRepeat,
   LoopOnce,
-  MathUtils
+  MathUtils,
+  Box3Helper
 } from 'three';
 import * as Hammer from 'hammerjs';
 import { PlayerStates } from '../enums/player-state';
@@ -14,18 +15,18 @@ export class Player {
   constructor(model, canvas) {
     this.canvas = canvas;
     this.clips = model.animations.map(animation => {
-      animation.name = animation.name.split('_')[1];
+      animation.name = animation.name.split('_')[1] || animation.name;
       return animation;
     });
     this.object = model.scene;
-    this.object.scale.set(0.7, 0.7, 0.7);
-    this.object.rotation.y = Math.PI;
+    this.object.scale.set(0.6, 0.6, 0.6);
     this.object.position.set(0, 0, 0);
     this.bBox = new Box3().setFromObject(this.object);
-    this.state = PlayerStates.RUN;
-    this.horizontalSpeed = 4;
-    this.horizontalAccelerationSpeed = 0.005;
-    this.horizontalAcceleration = 0.4;
+    this.boxHelper = new Box3Helper(this.bBox);
+    this.state = PlayerStates.CLAPPING;
+    this.horizontalSpeed = 7;
+    this.horizontalAccelerationSpeed = 0.01;
+    this.horizontalAcceleration = 0.5;
     this.oldState = this.state;
     this.jumpForce = new Vector3(0, 0.3, 0);
     this.lastDeltaTime = 1;
@@ -34,6 +35,7 @@ export class Player {
     this.velocity = new Vector3();
     this.forwardSpeed = 0;
     this.life = 3;
+    this.onPlayerJumpListener = () => {};
     this.initAnimations();
     this.playAnimation();
     this.bindEvents();
@@ -123,6 +125,7 @@ export class Player {
   jump() {
     if (this.checkIfJumpAvailable()) {
       this.velocity.add(this.jumpForce);
+      this.onPlayerJumpListener();
     }
   }
 
@@ -130,7 +133,7 @@ export class Player {
     return this.object.position.y === 0;
   }
 
-  playAnimation(loop = LoopRepeat) {
+  playAnimation(loop = LoopRepeat, clampWhenFinished = false) {
     if (this.state !== this.oldState) {
       if (this.action) {
         this.action.stop();
@@ -139,6 +142,7 @@ export class Player {
       const clip = AnimationClip.findByName(this.clips, this.state);
       this.action = this.mixer.clipAction(clip);
       this.action.setLoop(loop);
+      this.action.clampWhenFinished = clampWhenFinished;
       this.action.play();
     }
   }
@@ -148,6 +152,8 @@ export class Player {
     this.velocity.z = -this.forwardSpeed * deltaTime;
     this.object.position.add(this.velocity.clone());
     this.bBox.setFromObject(this.object);
+    this.bBox.expandByVector(new Vector3(-0.6, -0.2, -0.4));
+
     this.mixer.update(deltaTime * 1.2);
 
     this.moveHorizontalMobile();
@@ -163,6 +169,6 @@ export class Player {
 
   clampPosition() {
     this.object.position.x = MathUtils.clamp(this.object.position.x, -2.4, 2.4);
-    this.object.position.y = MathUtils.clamp(this.object.position.y, 0, 10);
+    this.object.position.y = MathUtils.clamp(this.object.position.y, 0, 11);
   }
 }

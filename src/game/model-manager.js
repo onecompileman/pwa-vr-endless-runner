@@ -7,10 +7,18 @@ export class ModelManager {
     this.gltfLoader = new GLTFLoader();
   }
 
-  async loadAllModels() {
+  async loadAllModels(loadingScreen) {
     const assetPath = 'assets/models/';
 
     this.models = cloneDeep(GameModels);
+
+    let progress = 0;
+
+    loadingScreen.loadingProgress = 0;
+    loadingScreen.loadingText = `Loading ${progress} out of ${
+      Object.keys(this.models).length
+    } models`;
+
     for (let key of Object.keys(this.models)) {
       let model = this.models[key];
       if (model instanceof Array) {
@@ -28,6 +36,12 @@ export class ModelManager {
       }
 
       this.models[key] = model;
+
+      // Update loading indicator
+      progress++;
+      loadingScreen.loadingText = `Loading ${progress} out of ${
+        Object.keys(this.models).length
+      } models`;
     }
   }
 

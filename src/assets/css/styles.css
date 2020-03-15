@@ -16,3 +16,29 @@ main {
   display: flex;
   justify-content: center;
 }
+
+menu-screen,
+about-screen,
+loading-screen,
+pause-screen,
+game-over,
+high-score,
+how-to-play {
+  position: absolute;
+  max-width: 450px;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  z-index: 100;
+  display: none;
+}
+
+in-game-ui {
+  position: absolute;
+  max-width: 450px;
+  width: 100%;
+  height: 104px;
+  top: 0;
+  z-index: 100;
+  display: none;
+}
