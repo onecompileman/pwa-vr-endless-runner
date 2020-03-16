@@ -89,6 +89,9 @@ export class GameManager {
     this.obstacleManager.player = this.player;
     this.obstacleManager.reset();
 
+    this.cloudManager.reset();
+    this.cloudManager.init();
+
     this.mainPlatformManager.reset();
     this.mainPlatformManager.init();
   }

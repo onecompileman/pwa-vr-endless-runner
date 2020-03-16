@@ -47,23 +47,22 @@ export class ObstacleManager {
 
   reset() {
     this.obstacleMatrix = this.obstacleMatrix.filter(row => {
+      // Dispose the allocation
       row.columns.forEach(col => {
-        if (col) {
-          if (col instanceof Array) {
-            col.forEach(item => {
-              this.objectPoolManager.free(
-                item.objectPool.name,
-                item.objectPool.index
-              );
-            });
-          }
+        if (col instanceof Array) {
+          col.forEach(item => {
+            if (item) {
+              this.freeObject(item.objectPool);
+            }
+          });
         } else {
-          this.objectPoolManager.free(
-            col.objectPool.name,
-            col.objectPool.index
-          );
+          if (col) {
+            this.freeObject(col.objectPool);
+          }
         }
       });
+
+      return false;
     });
   }
 

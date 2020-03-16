@@ -16,6 +16,14 @@ export class CloudManager {
     }
   }
 
+  reset() {
+    this.clouds = this.clouds.filter(cloud => {
+      const { name, index } = cloud.objectPool;
+      this.objectPoolManager.free(name, index);
+      return false;
+    });
+  }
+
   // Range of x1 = -4 to -2.4, x2 = 2.4 to 4, z = 10 - 30, y 3 - 7
 
   generateCloud(init = false) {

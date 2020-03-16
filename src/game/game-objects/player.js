@@ -82,7 +82,13 @@ export class Player {
 
     this.hammerEvent = new Hammer(this.canvas);
     this.hammerEvent.set({ enable: true });
-    this.hammerEvent.add(new Hammer.Swipe());
+    this.hammerEvent.add(
+      new Hammer.Swipe({
+        direction: Hammer.DIRECTION_ALL,
+        threshold: 2,
+        velocity: 0.2
+      })
+    );
     this.hammerEvent.on('swipeup', ev => this.jump());
   }
 
